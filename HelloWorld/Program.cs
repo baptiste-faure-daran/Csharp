@@ -10,29 +10,22 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Press Enter to start");
+            Message message = new Message();
 
-            bool work = true;
+            string userInput = "";
 
-            while(work)
+            while (true)
             {
-                if(Console.ReadKey(true).Key == ConsoleKey.Enter)
-                {
-                    Message message = new Message();
-                    message.display();
+                userInput = Console.ReadLine();
 
-                }
-                Console.ReadLine();
-                if (Console.ReadKey(true).Key == ConsoleKey.Escape)
+                if (userInput.ToLower() == "exit")
                 {
-                    Environment.Exit(0);
-
+                    break;
                 }
+
+                Console.WriteLine(message.CustomMessage);
             }
-
-            
-
         }
-       
+
     }
 }

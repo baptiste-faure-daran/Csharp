@@ -9,61 +9,137 @@ namespace HelloWorld
     public class Message
     {
 
-        string theDay = DateTime.Now.ToString("dddd");
-        string theTime = DateTime.Now.ToString("HH");
-        string userName = Environment.UserName;
+        private int _lowerThreshold;
+        private int _higherThreshold;
+        private int _middleThreshold;
 
+        private ITimeGiver _timeGiver;
+        private IUserGiver _userGiver;
+
+        public string CustomMessage => getMessage();
+
+        public DateTime theDate
+        {
+            get => _timeGiver.getCurrentTime();
+        }
+
+        public string userName
+        {
+            get => _userGiver.getCurrentUser();
+        }
+    
         public Message()
+            : this(new TimeGiver(), new UserGiver())
+            
+        {
+        }
+
+        public Message(ITimeGiver timeGiver, IUserGiver userGiver)
+            : this(
+                  9,
+                  13,
+                  18,
+                  timeGiver,
+                  userGiver)
+        {
+        }
+
+        public Message(int lower, int middle, int higher) 
+            : this(lower, middle, higher, new TimeGiver(), new UserGiver())
+        {
+        }
+        
+        public Message(int lower, int middle, int higher, ITimeGiver timeGiver, IUserGiver userGiver)
+        {
+            _lowerThreshold = lower;
+            _middleThreshold = middle;
+            _higherThreshold = higher;
+
+            _timeGiver = timeGiver;
+            _userGiver = userGiver;
+        }
+
+        private string getMessage()
         {
 
+            string messageBeginning;
+
+            if (theDate.DayOfWeek == DayOfWeek.Saturday || theDate.DayOfWeek == DayOfWeek.Sunday ||
+          (theDate.DayOfWeek == DayOfWeek.Friday && theDate.Hour >= _higherThreshold) ||
+          (theDate.DayOfWeek == DayOfWeek.Monday && theDate.Hour < _lowerThreshold))
+            {
+                messageBeginning = "Bon week-end";
+            }
+            else if (theDate.Hour < _lowerThreshold || theDate.Hour >= _higherThreshold)
+            {
+                messageBeginning = "Bonsoir";
+            }
+            else if (theDate.Hour < _middleThreshold)
+            {
+                messageBeginning = "Bonjour";
+            }
+            else
+            {
+                messageBeginning = "Bon apres-midi";
+            }
+
+            return (messageBeginning + " " + userName);
 
         }
 
-        public void display()
+        // DISPLAY MESSAGE AVANT CREATION CLASSE DATETIME
+        /*
+        public void displayMessage()
         {
+            var time = theDate.DayOfWeek;
 
-            if (theDay == "lundi" || theDay == "mardi" || theDay == "mercredi" || theDay == "jeudi")
+            switch(time)
             {
-                if (theTime == "9" || theTime == "10" || theTime == "11" || theTime == "12")
-                {
-                    Console.WriteLine("Bonjour " + userName);
+                case DayOfWeek.Tuesday:
+                case DayOfWeek.Wednesday:
+                
+                    if(theDate.Hour > 9 & theDate.Hour < 13)
+                    {
+                        Console.WriteLine("Bonjour " + UserName);
 
-                }
-                else if (theTime == "13" || theTime == "14" || theTime == "15" || theTime == "16" || theTime == "17")
-                {
-                    Console.WriteLine("Bon après-midi " + userName);
+                    } else if (theDate.Hour > 13 & theDate.Hour < 18)
+                    {
+                        Console.WriteLine("Bon après-midi " + UserName);
 
-                }
-                else
-                {
-                    Console.WriteLine("Bonsoir " + userName);
+                    } else
+                    {
+                        Console.WriteLine("Bonsoir  " + userName);
+                    }
+                    break;
 
-                }
+                case DayOfWeek.Saturday:
+                case DayOfWeek.Sunday:
 
-            }
-            else if (theDay == "vendredi")
-            {
+                    Console.WriteLine("Bon Weekend " + UserName);
+                    break;
 
-                if (theTime == "9" || theTime == "10" || theTime == "11" || theTime == "12")
-                {
-                    Console.WriteLine("Bonjour " + userName);
+                case DayOfWeek.Monday:
+                case DayOfWeek.Thursday:
 
-                }
-                else if (theTime == "13" || theTime == "14" || theTime == "15" || theTime == "16" || theTime == "17")
-                {
-                    Console.WriteLine("Bon après-midi " + userName);
+                    if (theDate.Hour > 9 & theDate.Hour < 13)
+                    {
+                        Console.WriteLine("Bonjour " + UserName);
 
-                }
-                else
-                {
-                    Console.WriteLine("Bon Weekend " + userName);
+                    }
+                    else if (theDate.Hour > 13 & theDate.Hour < 18)
+                    {
+                        Console.WriteLine("Bon après-midi " + UserName);
 
-                }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Bon weekend " + userName);
+                    }
+                    break;
 
-            }
-
-
+            }   
         }
+        */
 
     }
 }
