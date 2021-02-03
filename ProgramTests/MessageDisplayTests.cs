@@ -13,7 +13,6 @@ namespace ProgramTests
             // GIVEN 
             FakeTimeGiver fake = new FakeTimeGiver(DayOfWeek.Saturday, 15);
 
-
             // WHEN
             Message target = new Message(fake, new UserGiver());
 
